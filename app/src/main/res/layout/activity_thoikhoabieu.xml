@@ -1,0 +1,516 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/mainThoiKhoaBieu"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:orientation="vertical"
+    android:background="#FFFFFF"
+    tools:context=".ThoiKhoaBieuActivity">
+
+    <!-- Thanh tiêu đề -->
+    <RelativeLayout
+        android:layout_width="match_parent"
+        android:layout_height="56dp"
+        android:background="#2196F3"
+        android:padding="12dp">
+
+        <TextView
+            android:id="@+id/title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="THỜI KHÓA BIỂU"
+            android:textColor="#FFFFFF"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:layout_centerInParent="true"/>
+
+        <ImageView
+            android:id="@+id/btn_notification"
+            android:layout_width="24dp"
+            android:layout_height="24dp"
+            android:layout_alignParentEnd="true"
+            android:src="@drawable/ic_notification"
+            app:tint="#FFFFFF" />
+    </RelativeLayout>
+
+    <!-- Tháng + lịch ngang -->
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="8dp">
+
+        <TextView
+            android:id="@+id/txtMonth"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Tháng 5"
+            android:textStyle="bold"
+            android:textSize="18sp"
+            android:textColor="#000000"
+            android:layout_marginBottom="4dp"/>
+        <LinearLayout
+            android:id="@+id/dateRow"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:orientation="horizontal">
+
+            <!-- Mỗi ngày là 1 item: TextView và Button (hoặc clickable TextView) -->
+            <!-- Ví dụ với 7 ngày: CN đến Bảy -->
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="CN"
+                    android:textSize="14sp"
+                    android:textColor="#000000"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/sunday"
+                    android:text="18"
+                    android:layout_marginTop="4dp"
+                    android:padding="8dp"
+                    android:gravity="center"
+                        android:background="@drawable/bg_circle"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="Hai"
+                    android:textSize="14sp"
+                    android:textColor="#000000"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/monday"
+                    android:text="18"
+                    android:background="?attr/selectableItemBackground"
+                    android:layout_marginTop="4dp"
+                    android:padding="8dp"
+                    android:gravity="center"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="Ba"
+                    android:textSize="14sp"
+                    android:textColor="#000000"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/tuesday"
+                    android:text="18"
+                    android:layout_marginTop="4dp"
+                    android:padding="8dp"
+                    android:gravity="center"
+                    android:background="?attr/selectableItemBackground"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="Tư"
+                    android:textSize="14sp"
+                    android:textColor="#000000"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/wednesday"
+                    android:text="18"
+                    android:layout_marginTop="4dp"
+                    android:padding="8dp"
+                    android:gravity="center"
+                    android:background="?attr/selectableItemBackground"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="Năm"
+                    android:textSize="14sp"
+                    android:textColor="#000000"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/thursday"
+                    android:text="18"
+                    android:layout_marginTop="4dp"
+                    android:padding="8dp"
+                    android:gravity="center"
+                    android:background="?attr/selectableItemBackground"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="Sáu"
+                    android:textSize="14sp"
+                    android:textColor="#000000"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/friday"
+                    android:text="18"
+                    android:layout_marginTop="4dp"
+                    android:padding="8dp"
+                    android:gravity="center"
+                    android:background="?attr/selectableItemBackground"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+            </LinearLayout>
+            <LinearLayout
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:orientation="vertical"
+                android:gravity="center"
+                android:padding="8dp">
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:text="Bảy"
+                    android:textSize="14sp"
+                    android:textColor="#000000"
+                    android:gravity="center"/>
+
+                <TextView
+                    android:layout_width="40dp"
+                    android:layout_height="40dp"
+                    android:id="@+id/saturday"
+                    android:text="18"
+                    android:layout_marginTop="4dp"
+                    android:padding="8dp"
+                    android:gravity="center"
+                    android:background="?attr/selectableItemBackground"
+                    android:textColor="#000000"
+                    android:textSize="16sp"
+                    android:clickable="true"
+                    android:focusable="true"/>
+            </LinearLayout>
+            <!-- Lặp tương tự cho các ngày Hai, Ba, ... -->
+            <!-- ... tiếp tục từ 19 đến 24 giống trên, với id khác nhau: day19, day20,... -->
+        </LinearLayout>
+
+    </LinearLayout>
+
+    <!-- Khu vực hiển thị thời khóa biểu -->
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/maMonHoc1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NT118.P21"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:drawableLeft="@drawable/ic_book"
+                android:drawablePadding="8dp" />
+
+            <TextView
+                android:id="@+id/thoiGianHoc1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thứ 6, tiết 2-3, P.B3.18"
+                android:drawableLeft="@drawable/ic_clock"
+                android:drawablePadding="8dp"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/tenGiaoVien1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trần Mạnh Hùng"
+                android:textColor="#2196F3"
+                android:drawableLeft="@drawable/ic_person"
+                android:drawablePadding="8dp"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+    <androidx.cardview.widget.CardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="8dp"
+        app:cardElevation="4dp"
+        app:cardCornerRadius="8dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:padding="16dp">
+
+            <TextView
+                android:id="@+id/maMonHoc2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="NT118.P21"
+                android:textStyle="bold"
+                android:textSize="16sp"
+                android:drawableLeft="@drawable/ic_book"
+                android:drawablePadding="8dp" />
+
+            <TextView
+                android:id="@+id/thoiGianHoc2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Thứ 6, tiết 2-3, P.B3.18"
+                android:drawableLeft="@drawable/ic_clock"
+                android:drawablePadding="8dp"
+                android:layout_marginTop="8dp" />
+
+            <TextView
+                android:id="@+id/tenGiaoVien2"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Trần Mạnh Hùng"
+                android:textColor="#2196F3"
+                android:drawableLeft="@drawable/ic_person"
+                android:drawablePadding="8dp"
+                android:layout_marginTop="8dp" />
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <!-- Bottom navigation -->
+
+    <LinearLayout
+        android:id="@+id/timetableContainer"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        android:orientation="vertical"
+        android:padding="12dp" />
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="70dp"
+        android:orientation="horizontal"
+        android:background="#F5F5F5"
+        android:weightSum="6">
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+
+                android:padding="12dp"
+                android:src="@drawable/ic_tkb"
+                app:tint="#2196F3" />
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="TKB"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:src="@drawable/ic_lichthi"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Lịch thi"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:src="@drawable/ic_diem"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Điểm"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:src="@drawable/ic_hocphi"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Học phí"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:src="@drawable/ic_deadline"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Deadline"
+                android:gravity="center"/>
+        </LinearLayout>
+
+        <LinearLayout
+            android:layout_weight="1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:orientation="vertical"
+            android:gravity="center"
+            android:clickable="true"
+            android:focusable="true"
+            android:background="?attr/selectableItemBackground">
+
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:padding="12dp"
+                android:src="@drawable/ic_canhan"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="Cá nhân"
+                android:gravity="center"/>
+        </LinearLayout>
+    </LinearLayout>
+
+
+</LinearLayout>
