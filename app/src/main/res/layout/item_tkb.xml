@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:layout_marginBottom="12dp"
+    app:cardCornerRadius="8dp"
+    app:cardElevation="4dp">
+
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:padding="16dp">
+        <TextView
+            android:id="@+id/maMonHoc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="NT118.P21"
+            android:textStyle="bold"
+            android:textSize="16sp"
+            android:drawableLeft="@drawable/ic_book"
+            android:drawablePadding="8dp" />
+
+        <TextView
+            android:id="@+id/thoiGianHoc"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Thứ 6, tiết 2-3, P.B3.18"
+            android:drawableLeft="@drawable/ic_clock"
+            android:drawablePadding="8dp"
+            android:layout_marginTop="8dp" />
+
+        <TextView
+            android:id="@+id/tenGiaoVien"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="Trần Mạnh Hùng"
+            android:textColor="#2196F3"
+            android:drawableLeft="@drawable/ic_person"
+            android:drawablePadding="8dp"
+            android:layout_marginTop="8dp" />
+    </LinearLayout>
+</androidx.cardview.widget.CardView>
