@@ -1,0 +1,93 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="horizontal"
+    android:padding="12dp"
+    android:weightSum="8"
+    android:background="@drawable/bg_table_row_even">
+
+    <TextView
+        android:id="@+id/txtSubjectCode"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.2"
+        android:gravity="center"
+        android:padding="4dp"
+        android:textSize="11sp"
+        android:textColor="@android:color/black"
+        android:singleLine="true" />
+
+    <TextView
+        android:id="@+id/txtClassCode"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.2"
+        android:gravity="center"
+        android:padding="4dp"
+        android:textSize="11sp"
+        android:textColor="@android:color/black"
+        android:singleLine="true" />
+
+    <TextView
+        android:id="@+id/txtCredits"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.8"
+        android:gravity="center"
+        android:padding="4dp"
+        android:textSize="11sp"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/txtProcessGrade"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.8"
+        android:gravity="center"
+        android:padding="6dp"
+        android:textSize="11sp"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/txtPracticeGrade"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.8"
+        android:gravity="center"
+        android:padding="6dp"
+        android:textSize="11sp"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/txtMidtermGrade"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.8"
+        android:gravity="center"
+        android:padding="6dp"
+        android:textSize="11sp"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/txtFinalGrade"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="0.8"
+        android:gravity="center"
+        android:padding="6dp"
+        android:textSize="11sp"
+        android:textColor="@android:color/black" />
+
+    <TextView
+        android:id="@+id/txtAverageGrade"
+        android:layout_width="0dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1.0"
+        android:gravity="center"
+        android:padding="6dp"
+        android:textSize="11sp"
+        android:textColor="@android:color/black"
+        android:textStyle="bold" />
+
+</LinearLayout> 

@@ -1,101 +1,188 @@
 package com.example.doan;
 
+import android.content.Intent;
+import android.graphics.Color;
 import android.graphics.Typeface;
+import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.util.TypedValue;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.cardview.widget.CardView;
-import com.example.doan.ScheduleApiService;
-import com.example.doan.Schedule;
-import com.example.doan.ScheduleResponse;
-import java.util.List;
+import androidx.core.content.ContextCompat;
 import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
+import java.util.List;
 
-public class ScheduleActivity extends AppCompatActivity {
+public class ScheduleActivity extends BaseActivity {
 
+    private TextView txtMonth;
+    private TextView[] dayTextViews;
     private TextView selectedDateTextView;
     private LinearLayout scheduleLayout;
     private ScheduleApiService apiService;
+    private List<WeekUtils.DayInfo> weekDaysData;
+    private GestureDetector gestureDetector;
+    private SessionManager sessionManager;
+    private int studentId;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_thoikhoabieu);
-        scheduleLayout = findViewById(R.id.scheduleLayout);
-        // Thiết lập Retrofit
-        Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.7/DoAnAndroid/")
-                .addConverterFactory(GsonConverterFactory.create())
-                .build();
-        apiService = retrofit.create(ScheduleApiService.class);
-        // Xử lý sự kiện chọn ngày
-        setupClickListeners();
-    }
 
-    private void setupClickListeners() {
-        setDayClickListener(R.id.sunday);
-        setDayClickListener(R.id.monday);
-        setDayClickListener(R.id.tuesday);
-        setDayClickListener(R.id.wednesday);
-        setDayClickListener(R.id.thursday);
-        setDayClickListener(R.id.friday);
-        setDayClickListener(R.id.saturday);
-    }
+        // Khởi tạo views
+        initViews();
+        
+        // Khởi tạo session manager
+        sessionManager = new SessionManager(this);
+        
+        // Lấy student ID từ session
+        studentId = sessionManager.getStudentId();
+        
+        if (studentId == -1) {
+            Toast.makeText(this, "Lỗi: Không tìm thấy thông tin sinh viên", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
 
-    private void setDayClickListener(int textViewId) {
-        TextView dayTextView = findViewById(textViewId);
-        dayTextView.setOnClickListener(v -> {
-            if (selectedDateTextView != null) {
-                selectedDateTextView.setBackgroundColor(getResources().getColor(R.color.default_day_background));
+        // Setup Retrofit
+        setupRetrofit();
+
+        // Setup calendar
+        setupCalendar();
+        
+        // Setup navigation từ BaseActivity
+        setupNavigation();
+
+        gestureDetector = new GestureDetector(this, new SwipeGestureListener());
+        findViewById(R.id.scheduleLayout).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
             }
-            dayTextView.setBackgroundColor(getResources().getColor(R.color.selected_day_background));
-            selectedDateTextView = dayTextView;
-
-            int dayOfWeek = getDayOfWeekFromId(textViewId);
-            loadSchedule(dayOfWeek);
         });
     }
 
-    private int getDayOfWeekFromId(int textViewId) {
-        if (textViewId == R.id.sunday) return 1;
-        else if (textViewId == R.id.monday) return 2;
-        else if (textViewId == R.id.tuesday) return 3;
-        else if (textViewId == R.id.wednesday) return 4;
-        else if (textViewId == R.id.thursday) return 5;
-        else if (textViewId == R.id.friday) return 6;
-        else if (textViewId == R.id.saturday) return 7;
-        else return -1;
+    private void initViews() {
+        txtMonth = findViewById(R.id.txtMonth);
+        scheduleLayout = findViewById(R.id.scheduleLayout);
+
+        // Khởi tạo mảng TextView cho các ngày
+        //Tạo 1 mảng có 7 phần tu
+        dayTextViews = new TextView[7];
+        dayTextViews[0] = findViewById(R.id.sunday);
+        dayTextViews[1] = findViewById(R.id.monday);
+        dayTextViews[2] = findViewById(R.id.tuesday);
+        dayTextViews[3] = findViewById(R.id.wednesday);
+        dayTextViews[4] = findViewById(R.id.thursday);
+        dayTextViews[5] = findViewById(R.id.friday);
+        dayTextViews[6] = findViewById(R.id.saturday);
     }
 
-    private void loadSchedule(int dayOfWeek) {
-        apiService.getSchedule(dayOfWeek).enqueue(new Callback<ScheduleResponse>() {
+    private void setupRetrofit() {
+        Retrofit retrofit = new Retrofit.Builder()
+                .baseUrl("http://192.168.1.12/DoAnAndroid/")
+                .addConverterFactory(GsonConverterFactory.create())
+                .build();
+        apiService = retrofit.create(ScheduleApiService.class);
+    }
+
+    private void setupCalendar() {
+        // Set tên tháng
+        txtMonth.setText(WeekUtils.getCurrentMonthName());
+
+        // Lấy thông tin các ngày trong tuần
+        weekDaysData = WeekUtils.getCurrentWeekDays();
+
+        // Cập nhật từng TextView
+        for (int i = 0; i < weekDaysData.size() && i < dayTextViews.length; i++) {
+            WeekUtils.DayInfo dayInfo = weekDaysData.get(i);
+            TextView dayTextView = dayTextViews[i];
+            final int dayIndex = i;
+
+            if (dayTextView != null) {
+                // Set số ngày
+                dayTextView.setText(dayInfo.dayNumber);
+
+                // Highlight ngày hôm nay
+                if (dayInfo.isToday) {
+                    highlightToday(dayTextView);
+                    // Auto load schedule for today
+                    loadScheduleForDay(dayIndex + 1, dayTextView);
+                } else {
+                    // Reset về style mặc định
+                    resetDayStyle(dayTextView);
+                }
+
+                // Set click listener
+                dayTextView.setOnClickListener(v -> {
+                    onDayClicked(dayIndex, dayTextView, dayInfo);
+                });
+            }
+        }
+    }
+
+    private void onDayClicked(int dayIndex, TextView clickedTextView, WeekUtils.DayInfo dayInfo) {
+        // Reset style cho ngày trước đó
+        if (selectedDateTextView != null && selectedDateTextView != clickedTextView) {
+            resetDayStyle(selectedDateTextView);
+        }
+
+        // Highlight ngày được chọn
+        highlightSelectedDay(clickedTextView);
+        selectedDateTextView = clickedTextView;
+
+        // Load schedule cho ngày được chọn
+        int dayOfWeek = dayIndex + 1; // Calendar: Sunday=1, Monday=2, ...
+        loadScheduleForDay(dayOfWeek, clickedTextView);
+
+        // Show toast cho user feedback
+        Toast.makeText(this, "Đã chọn: " + dayInfo.fullDate, Toast.LENGTH_SHORT).show();
+    }
+
+    private void loadScheduleForDay(int dayOfWeek, TextView dayTextView) {
+        // Show loading state
+        scheduleLayout.removeAllViews();
+        TextView loadingText = new TextView(this);
+        loadingText.setText("Đang tải thời khóa biểu...");
+        loadingText.setTextSize(16);
+        loadingText.setPadding(16, 16, 16, 16);
+        scheduleLayout.addView(loadingText);
+
+        // API call
+        apiService.getSchedule(dayOfWeek, studentId).enqueue(new Callback<ScheduleResponse>() {
             @Override
             public void onResponse(Call<ScheduleResponse> call, Response<ScheduleResponse> response) {
-                if (response.body() != null && response.body().success) {
-                    updateScheduleUI(response.body().data);
+                scheduleLayout.removeAllViews(); // Remove loading text
+
+                if (response.isSuccessful() && response.body() != null && response.body().success) {
+                    if (response.body().data != null && !response.body().data.isEmpty()) {
+                        updateScheduleUI(response.body().data);
+                    } else {
+                        showEmptySchedule();
+                    }
                 } else {
-                    scheduleLayout.removeAllViews();
-                    Toast.makeText(ScheduleActivity.this, "Không có lịch học.", Toast.LENGTH_SHORT).show();
+                    showErrorMessage("Không thể tải thời khóa biểu");
                 }
             }
 
             @Override
             public void onFailure(Call<ScheduleResponse> call, Throwable t) {
-                Toast.makeText(ScheduleActivity.this, "Lỗi tải dữ liệu!", Toast.LENGTH_SHORT).show();
+                scheduleLayout.removeAllViews();
+                showErrorMessage("Lỗi kết nối: " + t.getMessage());
             }
         });
     }
 
     private void updateScheduleUI(List<Schedule> schedules) {
-        scheduleLayout.removeAllViews(); // Xóa giao diện cũ trước khi hiển thị mới
-
         for (Schedule schedule : schedules) {
             // Tạo CardView
             CardView cardView = new CardView(this);
@@ -103,6 +190,7 @@ public class ScheduleActivity extends AppCompatActivity {
             cardView.setRadius(12);
             cardView.setUseCompatPadding(true);
             cardView.setContentPadding(16, 16, 16, 16);
+            cardView.setCardBackgroundColor(Color.WHITE);
 
             // Tạo layout bên trong CardView
             LinearLayout cardContent = new LinearLayout(this);
@@ -113,14 +201,18 @@ public class ScheduleActivity extends AppCompatActivity {
             periodText.setText("Tiết: " + schedule.period);
             periodText.setTextSize(16);
             periodText.setTypeface(null, Typeface.BOLD);
+            periodText.setTextColor(ContextCompat.getColor(this, android.R.color.holo_blue_dark));
 
             TextView subjectText = new TextView(this);
             subjectText.setText("Môn: " + schedule.subject_name + " (" + schedule.subject_class + ")");
             subjectText.setTextSize(14);
+            subjectText.setTextColor(Color.BLACK);
+            subjectText.setPadding(0, 8, 0, 4);
 
             TextView timeText = new TextView(this);
             timeText.setText("Thời gian: " + schedule.start_time + " - " + schedule.end_time);
             timeText.setTextSize(14);
+            timeText.setTextColor(Color.GRAY);
 
             // Thêm TextView vào CardView
             cardContent.addView(periodText);
@@ -132,5 +224,105 @@ public class ScheduleActivity extends AppCompatActivity {
             // Thêm CardView vào layout chính
             scheduleLayout.addView(cardView);
         }
+    }
+
+    private void showEmptySchedule() {
+        TextView emptyText = new TextView(this);
+        emptyText.setText("📅 Không có lịch học cho ngày này");
+        emptyText.setTextSize(16);
+        emptyText.setTextColor(Color.GRAY);
+        emptyText.setPadding(16, 32, 16, 32);
+        emptyText.setGravity(android.view.Gravity.CENTER);
+        scheduleLayout.addView(emptyText);
+    }
+
+    private void showErrorMessage(String message) {
+        TextView errorText = new TextView(this);
+        errorText.setText("⚠️ " + message);
+        errorText.setTextSize(16);
+        errorText.setTextColor(ContextCompat.getColor(this, android.R.color.holo_red_dark));
+        errorText.setPadding(16, 32, 16, 32);
+        errorText.setGravity(android.view.Gravity.CENTER);
+        scheduleLayout.addView(errorText);
+    }
+
+    private void highlightToday(TextView textView) {
+        // Tạo background tròn màu xanh cho ngày hôm nay
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setShape(GradientDrawable.OVAL);
+        drawable.setColor(ContextCompat.getColor(this, android.R.color.holo_blue_light));
+        drawable.setStroke(2, Color.WHITE);
+
+        textView.setBackground(drawable);
+        textView.setTextColor(Color.WHITE);
+    }
+
+    private void highlightSelectedDay(TextView textView) {
+        // Tạo background tròn màu xanh đậm cho ngày được chọn
+        GradientDrawable drawable = new GradientDrawable();
+        drawable.setShape(GradientDrawable.OVAL);
+        drawable.setColor(ContextCompat.getColor(this, android.R.color.holo_blue_dark));
+        drawable.setStroke(2, Color.WHITE);
+
+        textView.setBackground(drawable);
+        textView.setTextColor(Color.WHITE);
+    }
+
+    private void resetDayStyle(TextView textView) {
+        // Reset về style mặc định
+        TypedValue outValue = new TypedValue();
+        getTheme().resolveAttribute(android.R.attr.selectableItemBackground, outValue, true);
+        textView.setBackgroundResource(outValue.resourceId);
+        textView.setTextColor(Color.BLACK);
+    }
+
+    // Method để refresh calendar (gọi khi cần cập nhật)
+    public void refreshCalendar() {
+        setupCalendar();
+    }
+
+    @Override
+    protected void onResume() {
+        super.onResume();
+        // Refresh calendar mỗi khi activity resume
+        refreshCalendar();
+    }
+
+    private class SwipeGestureListener extends GestureDetector.SimpleOnGestureListener {
+        private static final int SWIPE_THRESHOLD = 100;
+        private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            float diffX = e2.getX() - e1.getX();
+            float diffY = e2.getY() - e1.getY();
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (diffX > 0) {
+                        goToPreviousActivity();
+                    } else {
+                        goToNextActivity();
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    private void goToPreviousActivity() {
+        // Vuốt phải: sang ProfileActivity
+        Intent intent = new Intent(ScheduleActivity.this, ProfileActivity.class);
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        finish();
+    }
+
+    private void goToNextActivity() {
+        // Vuốt trái: sang LichThiActivity
+        // Schedule -> Grade (vuốt trái)
+        Intent intent = new Intent(ScheduleActivity.this, GradeActivity.class);
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        finish();
     }
 }

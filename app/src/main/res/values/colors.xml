@@ -1,7 +1,31 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="black">#FF000000</color>
-    <color name="white">#FFFFFFFF</color>
-    <color name="selected_day_background">#2196F3</color> <!-- Màu xanh -->
-    <color name="default_day_background">#FFFFFF</color> <!-- Màu trắng -->
+    <color name="selected_day_background">#1976D2</color>
+    <color name="default_day_background">#FFFFFF</color>
+    <color name="colorPrimary">#2196F3</color>
+    <color name="colorPrimaryDark">#1976D2</color>
+    <color name="colorAccent">#FF4081</color>
+    <color name="white">#FFFFFF</color>
+    <color name="black">#000000</color>
+    <color name="light_gray">#F9F9F9</color>
+    <color name="header_blue">#E3F2FD</color>
+    <color name="text_blue">#1976D2</color>
+    <color name="background_gray">#F5F5F5</color>
+    <color name="inactive_gray">#9E9E9E</color>
+    <color name="blue_primary">#2196F3</color>        <!-- Màu xanh dương chính -->
+    <color name="blue_dark">#1976D2</color>           <!-- Màu xanh dương đậm -->
+    <color name="blue_light">#BBDEFB</color>          <!-- Màu xanh dương nhạt -->
+    <color name="blue_accent">#448AFF</color>
+    <!-- Grade colors -->
+    <color name="grade_excellent_text">#2E7D32</color>
+    <color name="grade_good_text">#1976D2</color>
+    <color name="grade_average_text">#F57C00</color>
+    <color name="grade_poor_text">#D32F2F</color>
+
+    <!-- Additional colors for new features -->
+    <color name="primary_color">#2196F3</color>
+    <color name="text_primary">#212121</color>
+    <color name="text_secondary">#757575</color>
+    <color name="background_color">#F5F5F5</color>
+
 </resources>

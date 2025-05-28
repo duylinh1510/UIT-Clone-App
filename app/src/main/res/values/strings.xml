@@ -1,3 +1,22 @@
 <resources>
     <string name="app_name">DoAn</string>
+    <string name="grade_list_title">DANH SÁCH ĐIỂM</string>
+    <string name="subject_code">MAMH</string>
+    <string name="class_code">LỚP</string>
+    <string name="credits">TC</string>
+    <string name="process_grade">QT</string>
+    <string name="practice_grade">TH</string>
+    <string name="midterm_grade">GK</string>
+    <string name="final_grade">CK</string>
+    <string name="average_grade">TB</string>
+    <string name="schedule">TKB</string>
+    <string name="exam_schedule">Lịch Thi</string>
+    <string name="grades">Điểm</string>
+    <string name="tuition">Học phí</string>
+    <string name="deadline">Deadline</string>
+    <string name="profile">Cá nhân</string>
+    <string name="semester_format">Điểm: %s</string>
+    <string name="loading_grades">Đang tải điểm...</string>
+    <string name="error_loading_grades">Không thể tải dữ liệu điểm</string>
+    <string name="no_grades_found">Không tìm thấy dữ liệu điểm</string>
 </resources>

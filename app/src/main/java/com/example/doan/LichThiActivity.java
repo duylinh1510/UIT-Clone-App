@@ -1,18 +1,19 @@
 package com.example.doan;
 
+import android.content.Intent;
 import android.os.Bundle;
 import android.util.Log;
+import android.view.GestureDetector;
+import android.view.MotionEvent;
 import android.view.View;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
 import androidx.activity.EdgeToEdge;
-import androidx.appcompat.app.AppCompatActivity;
 import androidx.core.graphics.Insets;
 import androidx.core.view.ViewCompat;
 import androidx.core.view.WindowInsetsCompat;
-
 
 import com.google.gson.Gson;
 
@@ -22,9 +23,12 @@ import retrofit2.Call;
 import retrofit2.Callback;
 import retrofit2.Response;
 
-public class LichThiActivity extends AppCompatActivity {
+public class LichThiActivity extends BaseActivity {
     private LinearLayout container;
-    private int userId = 1;               // gán user_id hiện tại
+    private SessionManager sessionManager;
+    private int studentId;
+    private GestureDetector gestureDetector;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -36,12 +40,36 @@ public class LichThiActivity extends AppCompatActivity {
             return insets;
         });
         container = findViewById(R.id.examListContainer);
+        
+        // Khởi tạo session manager
+        sessionManager = new SessionManager(this);
+        
+        // Lấy student ID từ session
+        studentId = sessionManager.getStudentId();
+        
+        if (studentId == -1) {
+            Toast.makeText(this, "Lỗi: Không tìm thấy thông tin sinh viên", Toast.LENGTH_LONG).show();
+            finish();
+            return;
+        }
+        
         loadData();
+
+        // Setup navigation từ BaseActivity
+        setupNavigation();
+
+        gestureDetector = new GestureDetector(this, new SwipeGestureListener());
+        findViewById(R.id.examListContainer).setOnTouchListener(new View.OnTouchListener() {
+            @Override
+            public boolean onTouch(View v, MotionEvent event) {
+                return gestureDetector.onTouchEvent(event);
+            }
+        });
     }
 
     private void loadData() {
         ApiService api = ApiClient.getClient().create(ApiService.class);
-        api.getExamSchedule(userId).enqueue(new Callback<ApiResponse>() {
+        api.getExamSchedule(studentId).enqueue(new Callback<ApiResponse>() {
             @Override
             public void onResponse(Call<ApiResponse> call, Response<ApiResponse> resp) {
                 // 1. In toàn bộ body ra Log để kiểm tra
@@ -91,5 +119,42 @@ public class LichThiActivity extends AppCompatActivity {
         ((TextView)v.findViewById(R.id.tvPhongThi))
                 .setText("Phòng: "+e.getExamRoom());
         container.addView(v);
+    }
+
+    private class SwipeGestureListener extends GestureDetector.SimpleOnGestureListener {
+        private static final int SWIPE_THRESHOLD = 100;
+        private static final int SWIPE_VELOCITY_THRESHOLD = 100;
+        @Override
+        public boolean onFling(MotionEvent e1, MotionEvent e2, float velocityX, float velocityY) {
+            float diffX = e2.getX() - e1.getX();
+            float diffY = e2.getY() - e1.getY();
+            if (Math.abs(diffX) > Math.abs(diffY)) {
+                if (Math.abs(diffX) > SWIPE_THRESHOLD && Math.abs(velocityX) > SWIPE_VELOCITY_THRESHOLD) {
+                    if (diffX > 0) {
+                        goToPreviousActivity();
+                    } else {
+                        goToNextActivity();
+                    }
+                    return true;
+                }
+            }
+            return false;
+        }
+    }
+
+    private void goToPreviousActivity() {
+        // LichThi -> Grade (vuốt phải)
+        Intent intent = new Intent(LichThiActivity.this, GradeActivity.class);
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        finish();
+    }
+
+    private void goToNextActivity() {
+        // LichThi -> Profile (vuốt trái)
+        Intent intent = new Intent(LichThiActivity.this, ProfileActivity.class);
+        startActivity(intent);
+        overridePendingTransition(android.R.anim.slide_in_left, android.R.anim.slide_out_right);
+        finish();
     }
 }

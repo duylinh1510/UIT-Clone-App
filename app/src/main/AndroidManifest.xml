@@ -1,7 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
+
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+
     <application
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
@@ -13,25 +16,111 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.DoAn"
         tools:targetApi="31">
+
+        <activity
+            android:name=".LoginActivity"
+            android:exported="true"
+            android:theme="@style/Theme.DoAn.NoActionBar">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN" />
+                <category android:name="android.intent.category.LAUNCHER" />
+            </intent-filter>
+        </activity>
+
         <activity
             android:name=".ScheduleActivity"
-            android:exported="true" >
-        <intent-filter>
-            <action android:name="android.intent.action.MAIN" />
-            <category android:name="android.intent.category.LAUNCHER" />
-        </intent-filter>
-        </activity>
+            android:exported="true"
+            android:theme="@style/Theme.DoAn.NoActionBar" />
+
+        <activity
+            android:name=".GradeActivity"
+            android:exported="true"
+            android:theme="@style/Theme.DoAn.NoActionBar" />
+
         <activity
             android:name=".LichThiActivity"
-            android:exported="true" >
-        </activity>
+            android:exported="true"
+            android:theme="@style/Theme.DoAn.NoActionBar" />
         <activity
-            android:name=".ThoiKhoaBieuActivity"
-            android:exported="false">
-        </activity>
+            android:name=".ProfileActivity"
+            android:exported="true"
+            android:theme="@style/Theme.DoAn.NoActionBar" />
+        <activity
+            android:name=".AdminActivity"
+            android:exported="true"
+            android:theme="@style/Theme.DoAn.NoActionBar" />
+        <activity
+            android:name=".AdminStudentsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DoAn" />
+        <activity
+            android:name=".AddEditStudentActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DoAn" />
+        <activity
+            android:name=".AdminGradesActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DoAn" />
+        <activity
+            android:name=".AddEditGradeActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DoAn" />
+        <activity
+            android:name=".AdminDepartmentsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DoAn" />
+        <activity
+            android:name=".AddEditDepartmentActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DoAn" />
+        <activity
+            android:name=".AdminTeachersActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DoAn" />
+        <activity
+            android:name=".AddEditTeacherActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DoAn" />
+        <activity
+            android:name=".AdminSubjectsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DoAn" />
+        <activity
+            android:name=".AddEditSubjectActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DoAn" />
+        <activity
+            android:name=".AdminTimetablesActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DoAn" />
+        <activity
+            android:name=".AddEditTimetableActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DoAn" />
+        <activity
+            android:name=".DepartmentClassesActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DoAn" />
+
+        <activity
+            android:name=".AddEditProgramClassActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DoAn" />
+
+        <activity
+            android:name=".TimetableStudentsActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DoAn" />
+
+        <activity
+            android:name=".AddStudentToTimetableActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DoAn" />
+
         <activity
             android:name=".MainActivity"
-            android:exported="false" />
+            android:exported="false"
+            android:theme="@style/Theme.DoAn.NoActionBar" />
     </application>
 
 </manifest>
