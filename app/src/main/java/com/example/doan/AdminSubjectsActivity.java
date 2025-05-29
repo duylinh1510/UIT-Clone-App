@@ -76,6 +76,11 @@ public class AdminSubjectsActivity extends AppCompatActivity {
             public void onDeleteClick(Subject subject) {
                 confirmDeleteSubject(subject);
             }
+
+            @Override
+            public void onViewClassesClick(Subject subject) {
+                openSubjectClasses(subject);
+            }
         });
         
         rvSubjects.setLayoutManager(new LinearLayoutManager(this));
@@ -223,6 +228,12 @@ public class AdminSubjectsActivity extends AppCompatActivity {
                 Toast.makeText(AdminSubjectsActivity.this, "Lỗi kết nối: " + t.getMessage(), Toast.LENGTH_SHORT).show();
             }
         });
+    }
+
+    private void openSubjectClasses(Subject subject) {
+        Intent intent = new Intent(this, SubjectClassesActivity.class);
+        intent.putExtra("subject", subject);
+        startActivity(intent);
     }
 
     @Override

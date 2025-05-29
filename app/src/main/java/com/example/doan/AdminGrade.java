@@ -16,6 +16,9 @@ public class AdminGrade implements Serializable {
     @SerializedName("subject_name")
     private String subjectName;
     
+    @SerializedName("subject_class_code")
+    private String subjectClassCode;
+    
     @SerializedName("process_grade")
     private Double processGrade;
     
@@ -65,6 +68,14 @@ public class AdminGrade implements Serializable {
 
     public void setSubjectName(String subjectName) {
         this.subjectName = subjectName;
+    }
+
+    public String getSubjectClassCode() {
+        return subjectClassCode;
+    }
+
+    public void setSubjectClassCode(String subjectClassCode) {
+        this.subjectClassCode = subjectClassCode;
     }
 
     public Double getProcessGrade() {
@@ -123,6 +134,7 @@ public class AdminGrade implements Serializable {
                 ", studentCode='" + studentCode + '\'' +
                 ", studentName='" + studentName + '\'' +
                 ", subjectName='" + subjectName + '\'' +
+                ", subjectClassCode='" + subjectClassCode + '\'' +
                 ", processGrade=" + processGrade +
                 ", practiceGrade=" + practiceGrade +
                 ", midtermGrade=" + midtermGrade +

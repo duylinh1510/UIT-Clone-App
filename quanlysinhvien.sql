@@ -3,7 +3,7 @@
 -- https://www.phpmyadmin.net/
 --
 -- Máy chủ: 127.0.0.1
--- Thời gian đã tạo: Th5 27, 2025 lúc 07:49 PM
+-- Thời gian đã tạo: Th5 28, 2025 lúc 08:09 AM
 -- Phiên bản máy phục vụ: 10.4.32-MariaDB
 -- Phiên bản PHP: 8.2.12
 
@@ -40,10 +40,8 @@ CREATE TABLE `department` (
 INSERT INTO `department` (`department_id`, `department_code`, `department_name`) VALUES
 (1, 'CNTT', 'Khoa CNTT'),
 (2, 'HTTT', 'Hệ thống thông tin'),
-(3, 'KTDT', 'Kỹ thuật điện tử'),
-(4, 'KTCK', 'Kỹ thuật cơ khí'),
 (5, 'CNPM', 'Cong Nghe Phan Mem'),
-(6, NULL, 'Mang May Tinh');
+(6, 'MMT', 'Mang May Tinh');
 
 -- --------------------------------------------------------
 
@@ -123,7 +121,7 @@ INSERT INTO `program_class` (`program_class_id`, `program_class_code`, `teacher_
 (1, 'CNTT2025A', 1, 2025, 1),
 (2, 'CNTT2025B', 2, 2025, 1),
 (3, 'HTTT2022.1', 1, 2022, 2),
-(4, 'Hệ thống thông tin 2', 1, 2022, 2);
+(5, 'HTTT2024.1', 2, 2024, 2);
 
 -- --------------------------------------------------------
 
@@ -149,7 +147,34 @@ CREATE TABLE `student` (
 INSERT INTO `student` (`student_id`, `student_code`, `user_id`, `student_full_name`, `program_class_id`, `date_of_birth`, `student_email`, `student_address`) VALUES
 (1, '22520226', 2, 'Nguyễn Tiến Đạt', 1, '2004-03-10', 'datnt@gmail.com', '123 Lê Văn Việt, TP. Thủ Đức'),
 (2, '22520780', 3, 'Linh Vu', 3, '2004-07-20', 'linhvnd@gmail.com', '456 Xa lộ Hà Nội, TP. Thủ Đức'),
-(3, '22520454', 6, 'Nguyen Van Hoa', 3, '2004-05-27', '22520454@gm.uit.edu.vn', 'Kien Giang');
+(3, '22520454', 6, 'Nguyen Van Hoa', 3, '2004-05-27', '22520454@gm.uit.edu.vn', 'Kien Giang'),
+(4, '22520756', 9, 'Dang Quang Khanh Linh', 3, '2025-05-28', '22520756@gm.uit.edu.vn', 'Dong Nai');
+
+-- --------------------------------------------------------
+
+--
+-- Cấu trúc bảng cho bảng `student_enrollment`
+--
+
+CREATE TABLE `student_enrollment` (
+  `enrollment_id` int(11) NOT NULL,
+  `student_id` int(11) NOT NULL,
+  `subject_class_id` int(11) NOT NULL,
+  `enrollment_date` datetime DEFAULT current_timestamp(),
+  `status` enum('active','dropped','completed') DEFAULT 'active'
+) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_general_ci;
+
+--
+-- Đang đổ dữ liệu cho bảng `student_enrollment`
+--
+
+INSERT INTO `student_enrollment` (`enrollment_id`, `student_id`, `subject_class_id`, `enrollment_date`, `status`) VALUES
+(1, 1, 1, '2025-05-28 12:41:55', 'active'),
+(2, 1, 2, '2025-05-28 12:41:55', 'active'),
+(3, 2, 1, '2025-05-28 12:41:55', 'active'),
+(4, 2, 2, '2025-05-28 12:41:55', 'active'),
+(5, 3, 1, '2025-05-28 12:41:55', 'active'),
+(7, 4, 1, '2025-05-28 12:48:55', 'active');
 
 -- --------------------------------------------------------
 
@@ -171,7 +196,7 @@ CREATE TABLE `subject` (
 
 INSERT INTO `subject` (`subject_id`, `subject_code`, `name`, `department_id`, `credits`) VALUES
 (1, 'MB101', 'Lập trình mobile', 6, 3),
-(2, 'DA101', 'Phân tích dữ liệu', 1, 3),
+(2, 'DA101', 'Phân tích dữ liệu', 2, 3),
 (3, 'IS405.P23', 'Cơ sở dữ liệu phân tán', 2, 4),
 (4, 'IS405', 'Dữ liệu lớn', 2, 4);
 
@@ -240,8 +265,8 @@ CREATE TABLE `timetable` (
 --
 
 INSERT INTO `timetable` (`timetable_id`, `subject_class_id`, `day_of_week`, `period`, `start_time`, `end_time`) VALUES
-(1, 1, 2, 3, '08:00:00', '09:50:00'),
-(2, 2, 2, 4, '10:00:00', '11:50:00'),
+(1, 1, 2, 2, '08:00:00', '09:50:00'),
+(2, 2, 2, 5, '10:00:00', '11:50:00'),
 (3, 1, 3, 3, '07:31:00', '10:05:00');
 
 -- --------------------------------------------------------
@@ -267,7 +292,8 @@ INSERT INTO `user` (`user_id`, `username`, `password`, `role`) VALUES
 (3, 'linhvnd', 'password_hash', 'student'),
 (4, 'longdp', 'password_hash', 'teacher'),
 (5, 'nhutnm', 'password_hash', 'teacher'),
-(6, 'nvhoa', '$2y$10$TgqvWBuP933vFwO.izF/k.sjzGlXcx3Q8neZHJfyJPfdZw3NJ0JCi', 'student');
+(6, 'nvhoa', '$2y$10$TgqvWBuP933vFwO.izF/k.sjzGlXcx3Q8neZHJfyJPfdZw3NJ0JCi', 'student'),
+(9, 'linhdqk', '$2y$10$Iawg9dJ9lsC2FlCaqpwplOFLk4mbLxJOIeyCQ.0ePIGPKErXG/vXu', 'student');
 
 --
 -- Chỉ mục cho các bảng đã đổ
@@ -314,6 +340,15 @@ ALTER TABLE `student`
   ADD UNIQUE KEY `student_code` (`student_code`),
   ADD KEY `user_id` (`user_id`),
   ADD KEY `program_class_id` (`program_class_id`);
+
+--
+-- Chỉ mục cho bảng `student_enrollment`
+--
+ALTER TABLE `student_enrollment`
+  ADD PRIMARY KEY (`enrollment_id`),
+  ADD UNIQUE KEY `unique_student_subject_class` (`student_id`,`subject_class_id`),
+  ADD KEY `student_id` (`student_id`),
+  ADD KEY `subject_class_id` (`subject_class_id`);
 
 --
 -- Chỉ mục cho bảng `subject`
@@ -380,13 +415,19 @@ ALTER TABLE `grade`
 -- AUTO_INCREMENT cho bảng `program_class`
 --
 ALTER TABLE `program_class`
-  MODIFY `program_class_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+  MODIFY `program_class_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=6;
 
 --
 -- AUTO_INCREMENT cho bảng `student`
 --
 ALTER TABLE `student`
-  MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=4;
+  MODIFY `student_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=5;
+
+--
+-- AUTO_INCREMENT cho bảng `student_enrollment`
+--
+ALTER TABLE `student_enrollment`
+  MODIFY `enrollment_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=8;
 
 --
 -- AUTO_INCREMENT cho bảng `subject`
@@ -416,7 +457,7 @@ ALTER TABLE `timetable`
 -- AUTO_INCREMENT cho bảng `user`
 --
 ALTER TABLE `user`
-  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=9;
+  MODIFY `user_id` int(11) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=10;
 
 --
 -- Các ràng buộc cho các bảng đã đổ
@@ -449,6 +490,13 @@ ALTER TABLE `program_class`
 ALTER TABLE `student`
   ADD CONSTRAINT `student_ibfk_1` FOREIGN KEY (`user_id`) REFERENCES `user` (`user_id`) ON DELETE CASCADE,
   ADD CONSTRAINT `student_ibfk_2` FOREIGN KEY (`program_class_id`) REFERENCES `program_class` (`program_class_id`) ON DELETE CASCADE;
+
+--
+-- Các ràng buộc cho bảng `student_enrollment`
+--
+ALTER TABLE `student_enrollment`
+  ADD CONSTRAINT `student_enrollment_ibfk_1` FOREIGN KEY (`student_id`) REFERENCES `student` (`student_id`) ON DELETE CASCADE,
+  ADD CONSTRAINT `student_enrollment_ibfk_2` FOREIGN KEY (`subject_class_id`) REFERENCES `subject_class` (`subject_class_id`) ON DELETE CASCADE;
 
 --
 -- Các ràng buộc cho bảng `subject`

@@ -18,6 +18,7 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Subjec
     public interface OnSubjectClickListener {
         void onEditClick(Subject subject);
         void onDeleteClick(Subject subject);
+        void onViewClassesClick(Subject subject);
     }
 
     public SubjectsAdapter(List<Subject> subjectsList, OnSubjectClickListener listener) {
@@ -68,6 +69,13 @@ public class SubjectsAdapter extends RecyclerView.Adapter<SubjectsAdapter.Subjec
             tvHours.setVisibility(View.GONE);
             
             tvDepartmentName.setText(subject.getDepartmentName() != null ? subject.getDepartmentName() : "Chưa có khoa");
+
+            // Click vào item để xem các lớp
+            itemView.setOnClickListener(v -> {
+                if (listener != null) {
+                    listener.onViewClassesClick(subject);
+                }
+            });
 
             btnEdit.setOnClickListener(v -> {
                 if (listener != null) {

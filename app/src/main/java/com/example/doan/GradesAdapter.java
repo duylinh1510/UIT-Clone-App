@@ -77,7 +77,11 @@ public class GradesAdapter extends RecyclerView.Adapter<GradesAdapter.GradeViewH
                 grade.getStudentCode(), grade.getStudentName()));
             
             // Subject and semester
-            tvSubject.setText(grade.getSubjectName());
+            String subjectText = grade.getSubjectName();
+            if (grade.getSubjectClassCode() != null && !grade.getSubjectClassCode().isEmpty()) {
+                subjectText += " (" + grade.getSubjectClassCode() + ")";
+            }
+            tvSubject.setText(subjectText);
             tvSemester.setText(grade.getSemester());
             
             // Individual grades

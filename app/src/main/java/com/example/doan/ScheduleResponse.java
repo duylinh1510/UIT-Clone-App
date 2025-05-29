@@ -9,7 +9,10 @@ public class ScheduleResponse {
     
     @SerializedName("data")
     public List<Schedule> data;
-    
+
+    @SerializedName("message")
+    public String message;
+
     @SerializedName("day_of_week")
     public int dayOfWeek;
     

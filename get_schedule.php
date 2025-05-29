@@ -34,7 +34,7 @@ try {
     
     // Build query based on whether student_id is provided
     if ($student_id) {
-        // Get timetable for specific student
+        // Get timetable for specific student using student_enrollment table
         $sql = "SELECT tt.timetable_id as schedule_id, tt.subject_class_id, tt.day_of_week, tt.period,
                        tt.start_time, tt.end_time, '' as classroom,
                        s.subject_code, s.name as subject_name, s.credits,
@@ -46,13 +46,8 @@ try {
                 JOIN subject s ON subcl.subject_id = s.subject_id
                 LEFT JOIN teacher t ON subcl.teacher_id = t.teacher_id
                 LEFT JOIN department d ON s.department_id = d.department_id
-                JOIN student st ON st.program_class_id IN (
-                    SELECT DISTINCT pc.program_class_id 
-                    FROM program_class pc 
-                    JOIN subject_class sc ON sc.teacher_id = pc.teacher_id 
-                    WHERE sc.subject_class_id = tt.subject_class_id
-                )
-                WHERE tt.day_of_week = ? AND st.student_id = ?
+                JOIN student_enrollment se ON se.subject_class_id = subcl.subject_class_id
+                WHERE tt.day_of_week = ? AND se.student_id = ? AND se.status = 'active'
                 ORDER BY tt.period";
         
         $stmt = $conn->prepare($sql);
@@ -93,7 +88,11 @@ try {
         'success' => true,
         'data' => $schedules,
         'day_of_week' => $day_of_week,
-        'total_schedules' => count($schedules)
+        'total_schedules' => count($schedules),
+        'debug_info' => [
+            'student_id' => $student_id,
+            'query_type' => $student_id ? 'student_specific' : 'all_timetables'
+        ]
     ]);
     
 } catch (Exception $e) {

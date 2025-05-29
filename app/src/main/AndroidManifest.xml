@@ -90,6 +90,14 @@
             android:exported="false"
             android:theme="@style/Theme.DoAn" />
         <activity
+            android:name=".SubjectClassesActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DoAn" />
+        <activity
+            android:name=".AddEditSubjectClassActivity"
+            android:exported="false"
+            android:theme="@style/Theme.DoAn" />
+        <activity
             android:name=".AdminTimetablesActivity"
             android:exported="false"
             android:theme="@style/Theme.DoAn" />

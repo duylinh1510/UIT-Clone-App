@@ -5,6 +5,7 @@ import android.graphics.Color;
 import android.graphics.Typeface;
 import android.graphics.drawable.GradientDrawable;
 import android.os.Bundle;
+import android.util.Log;
 import android.util.TypedValue;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
@@ -22,6 +23,8 @@ import retrofit2.converter.gson.GsonConverterFactory;
 import java.util.List;
 
 public class ScheduleActivity extends BaseActivity {
+
+    private static final String TAG = "ScheduleActivity";
 
     private TextView txtMonth;
     private TextView[] dayTextViews;
@@ -47,7 +50,12 @@ public class ScheduleActivity extends BaseActivity {
         // Lấy student ID từ session
         studentId = sessionManager.getStudentId();
         
-        if (studentId == -1) {
+        Log.i(TAG, "onCreate: studentId = " + studentId);
+        Log.i(TAG, "onCreate: studentCode = " + sessionManager.getStudentCode());
+        Log.i(TAG, "onCreate: studentName = " + sessionManager.getStudentFullName());
+        
+        if (studentId == 0) {
+            Log.e(TAG, "Student ID is 0 - session problem!");
             Toast.makeText(this, "Lỗi: Không tìm thấy thông tin sinh viên", Toast.LENGTH_LONG).show();
             finish();
             return;
@@ -149,6 +157,8 @@ public class ScheduleActivity extends BaseActivity {
     }
 
     private void loadScheduleForDay(int dayOfWeek, TextView dayTextView) {
+        Log.i(TAG, "loadScheduleForDay: dayOfWeek = " + dayOfWeek + ", studentId = " + studentId);
+        
         // Show loading state
         scheduleLayout.removeAllViews();
         TextView loadingText = new TextView(this);
@@ -162,21 +172,36 @@ public class ScheduleActivity extends BaseActivity {
             @Override
             public void onResponse(Call<ScheduleResponse> call, Response<ScheduleResponse> response) {
                 scheduleLayout.removeAllViews(); // Remove loading text
-
-                if (response.isSuccessful() && response.body() != null && response.body().success) {
-                    if (response.body().data != null && !response.body().data.isEmpty()) {
-                        updateScheduleUI(response.body().data);
+                
+                Log.i(TAG, "API Response: success = " + response.isSuccessful());
+                Log.i(TAG, "Response body: " + (response.body() != null ? response.body().toString() : "null"));
+                
+                if (response.isSuccessful() && response.body() != null) {
+                    Log.i(TAG, "Response success = " + response.body().success);
+                    Log.i(TAG, "Response data size = " + (response.body().data != null ? response.body().data.size() : 0));
+                    
+                    if (response.body().success) {
+                        if (response.body().data != null && !response.body().data.isEmpty()) {
+                            Log.i(TAG, "Updating UI with " + response.body().data.size() + " schedules");
+                            updateScheduleUI(response.body().data);
+                        } else {
+                            Log.i(TAG, "No schedule data for this day");
+                            showEmptySchedule();
+                        }
                     } else {
-                        showEmptySchedule();
+                        Log.e(TAG, "Server returned success=false");
+                        showErrorMessage("Server error: " + (response.body().message != null ? response.body().message : "Unknown error"));
                     }
                 } else {
-                    showErrorMessage("Không thể tải thời khóa biểu");
+                    Log.e(TAG, "Response not successful: " + response.code());
+                    showErrorMessage("Không thể tải thời khóa biểu (HTTP " + response.code() + ")");
                 }
             }
 
             @Override
             public void onFailure(Call<ScheduleResponse> call, Throwable t) {
                 scheduleLayout.removeAllViews();
+                Log.e(TAG, "API call failed", t);
                 showErrorMessage("Lỗi kết nối: " + t.getMessage());
             }
         });

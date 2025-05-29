@@ -8,6 +8,8 @@ import retrofit2.http.POST;
 import retrofit2.http.PUT;
 import retrofit2.http.Query;
 
+//Đây là một interface ApiService sử dụng thư viện Retrofit để định nghĩa các API endpoints
+//cho một ứng dụng quản lý sinh viên (có thể là hệ thống quản lý trường học).
 public interface ApiService {
     // Login API
     @POST("login.php")
@@ -134,6 +136,18 @@ public interface ApiService {
             @Query("subject_id") Integer subjectId
     );
     
+    @POST("admin/subject_classes.php")
+    Call<AdminResponse> createSubjectClass(@Body CreateSubjectClassRequest request);
+    
+    @PUT("admin/subject_classes.php")
+    Call<AdminResponse> updateSubjectClass(@Body UpdateSubjectClassRequest request);
+    
+    @PUT("admin/subject_classes.php")
+    Call<AdminResponse> updateSubjectClassTeacher(@Body UpdateSubjectClassTeacherRequest request);
+    
+    @DELETE("admin/subject_classes.php")
+    Call<AdminResponse> deleteSubjectClass(@Query("subject_class_id") int subjectClassId);
+
     // Timetables Management
     @GET("admin/timetables.php")
     Call<AdminTimetablesResponse> getTimetables(

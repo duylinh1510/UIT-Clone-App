@@ -49,7 +49,7 @@
 
         <LinearLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
+            android:layout_height="match_parent"
             android:orientation="vertical">
 
             <!-- Welcome Text -->
@@ -87,7 +87,7 @@
                         android:layout_weight="1"
                         android:layout_marginEnd="6dp"
                         android:text="Quản lý\nSinh viên"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textColor="#FFFFFF"
                         android:backgroundTint="#2196F3"
                         android:drawableTop="@drawable/ic_student"
@@ -101,7 +101,7 @@
                         android:layout_weight="1"
                         android:layout_marginStart="6dp"
                         android:text="Quản lý\nGiáo viên"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textColor="#FFFFFF"
                         android:backgroundTint="#4CAF50"
                         android:drawableTop="@drawable/ic_teacher"
@@ -124,7 +124,7 @@
                         android:layout_weight="1"
                         android:layout_marginEnd="6dp"
                         android:text="Quản lý\nKhoa"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textColor="#FFFFFF"
                         android:backgroundTint="#FF9800"
                         android:drawableTop="@drawable/ic_department"
@@ -138,7 +138,7 @@
                         android:layout_weight="1"
                         android:layout_marginStart="6dp"
                         android:text="Quản lý\nMôn học"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textColor="#FFFFFF"
                         android:backgroundTint="#9C27B0"
                         android:drawableTop="@drawable/ic_subject"
@@ -161,7 +161,7 @@
                         android:layout_weight="1"
                         android:layout_marginEnd="6dp"
                         android:text="Quản lý\nĐiểm"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textColor="#FFFFFF"
                         android:backgroundTint="#FF5722"
                         android:drawableTop="@drawable/ic_grade"
@@ -175,7 +175,7 @@
                         android:layout_weight="1"
                         android:layout_marginStart="6dp"
                         android:text="Quản lý\nThời khóa biểu"
-                        android:textSize="14sp"
+                        android:textSize="12sp"
                         android:textColor="#FFFFFF"
                         android:backgroundTint="#607D8B"
                         android:drawableTop="@drawable/ic_schedule"
@@ -189,13 +189,13 @@
                     android:id="@+id/btnLogout"
                     android:layout_width="match_parent"
                     android:layout_height="56dp"
-                    android:text="ĐĂNG XUẤT"
-                    android:textSize="16sp"
-                    android:textColor="#FFFFFF"
                     android:backgroundTint="#F44336"
                     android:drawableLeft="@drawable/ic_logout"
                     android:drawablePadding="8dp"
-                    android:elevation="4dp" />
+                    android:elevation="4dp"
+                    android:text="ĐĂNG XUẤT"
+                    android:textColor="#FFFFFF"
+                    android:textSize="16sp" />
 
             </LinearLayout>
         </LinearLayout>
