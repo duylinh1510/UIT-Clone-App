@@ -37,10 +37,10 @@ public class GradeActivity extends BaseActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_grade);
 
-        initViews();
-        initData();
-        setupNavigation();
-        loadStudentGrades();
+        initViews(); //Ánh xạ các View
+        initData();  // Khởi tạo API service, session
+        setupNavigation(); // Cấu hình thanh điều hướng (từ lớp cha BaseActivity)
+        loadStudentGrades(); // Gọi API để lấy điểm
 
         gestureDetector = new GestureDetector(this, new SwipeGestureListener());
         findViewById(R.id.gradeLayout).setOnTouchListener(new View.OnTouchListener() {
@@ -78,6 +78,11 @@ public class GradeActivity extends BaseActivity {
 
         Log.d(TAG, "Loading grades for student ID: " + studentId);
 
+        //Gọi API bất đồng bộ để lấy điểm của sinh viên (sử dụng Retrofit).
+        //
+        //Hiển thị trạng thái loading.
+        //
+        //Xử lý kết quả trả về từ server hoặc lỗi mạng.
         Call<GradeResponse> call = apiService.getStudentGrades(studentId);
         call.enqueue(new Callback<GradeResponse>() {
             @Override
@@ -153,6 +158,10 @@ public class GradeActivity extends BaseActivity {
         semesterContainer.setVisibility(View.GONE);
     }
 
+    // Với mỗi học kỳ, tạo một view con (item_semester_grade) và thêm vào semesterContainer.
+    //
+    // Mỗi học kỳ gồm nhiều môn học, mỗi dòng hiển thị mã môn, mã lớp,
+    // điểm quá trình, điểm thực hành, điểm giữa kỳ, điểm cuối kỳ, điểm trung bình.
     private void populateGrades(List<SemesterGrade> semesterGrades) {
         emptyStateLayout.setVisibility(View.GONE);
         semesterContainer.setVisibility(View.VISIBLE);
@@ -164,17 +173,28 @@ public class GradeActivity extends BaseActivity {
     }
 
     private void createSemesterView(SemesterGrade semesterGrade) {
+        //Dùng LayoutInflater để ép kiểu XML item_semester_grade.xml thành một đối tượng View.
+        //Không gắn ngay vào semesterContainer (attachToRoot = false), vì ta sẽ xử lý thêm trước khi thêm vào.
         LayoutInflater inflater = LayoutInflater.from(this);
         View semesterView = inflater.inflate(R.layout.item_semester_grade, semesterContainer, false);
 
-        // Set semester title
+        // Lấy TextView tiêu đề học kỳ từ item_semester_grade.xml.
+        //
+        //Gán tên học kỳ, ví dụ: 🎓 Điểm: HK2 2024-2025.
         TextView semesterTitle = semesterView.findViewById(R.id.semesterTitle);
         semesterTitle.setText("🎓 Điểm: " + semesterGrade.getSemester());
 
-        // Get table container
+        // Lấy LinearLayout là nơi sẽ chứa từng dòng điểm (grade row).
         LinearLayout gradeTableContainer = semesterView.findViewById(R.id.gradeTableContainer);
 
-        // Add grade rows
+        // Duyệt danh sách môn học và thêm từng dòng điểm
+        //Nếu có điểm:
+        //Duyệt danh sách Grade, gọi addGradeRow(...) để thêm dòng điểm.
+        //Đồng thời tính thống kê:
+        //totalCredits: tổng số tín chỉ
+        //totalGradePoints: tổng tích số (average * tín chỉ)
+        //validGradeCount: tổng tín chỉ được tính GPA
+        //Nếu không có điểm:
         List<Grade> grades = semesterGrade.getGrades();
         if (grades != null && !grades.isEmpty()) {
             int totalCredits = 0;
@@ -194,43 +214,49 @@ public class GradeActivity extends BaseActivity {
             }
 
             // Hiển thị thống kê
+            // Tính GPA = totalGradePoints / validGradeCount.
+            // Hiển thị số tín chỉ và GPA của học kỳ ở cuối bảng.
             showSemesterStats(semesterView, totalCredits, totalGradePoints, validGradeCount);
         } else {
-            // Add empty row if no grades
+            // Gọi addEmptyRow(...) để hiển thị dòng “Không có dữ liệu”
             addEmptyRow(gradeTableContainer);
         }
-
+        //Thêm View của học kỳ (đã có tiêu đề, bảng điểm, thống kê)
+        //vào semesterContainer (trong layout chính activity_grade.xml).
         semesterContainer.addView(semesterView);
     }
 
+    //Tạo một hàng (row) điểm cho một môn học và thêm vào bảng điểm (LinearLayout container).
     private void addGradeRow(LinearLayout container, Grade grade, int rowIndex) {
+        //Tạo một LinearLayout mới theo chiều ngang để chứa các ô dữ liệu.
         LinearLayout row = new LinearLayout(this);
         row.setLayoutParams(new LinearLayout.LayoutParams(
                 LinearLayout.LayoutParams.MATCH_PARENT,
                 LinearLayout.LayoutParams.WRAP_CONTENT
         ));
         row.setOrientation(LinearLayout.HORIZONTAL);
-        row.setPadding(12, 8, 12, 8);
-        row.setWeightSum(8);
+        row.setPadding(12, 8, 12, 8); //Padding tạo khoảng cách trong hàng.
+        row.setWeightSum(8); ////weightSum = 8 là tổng trọng số dùng để phân chia chiều rộng giữa các ô.
 
-        // Set alternating row colors
+        // Nếu rowIndex là số chẵn → dùng background màu A (thường sáng).
+        //Nếu lẻ → dùng background màu B (thường tối hơn).
         if (rowIndex % 2 == 0) {
             row.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_table_row_even));
         } else {
             row.setBackground(ContextCompat.getDrawable(this, R.drawable.bg_table_row_odd));
         }
 
-        // Subject Code
+        // Mã môn
         TextView subjectCode = createTableCell(
                 grade.getSubjectCode() != null ? grade.getSubjectCode() : "", 1.2f);
         row.addView(subjectCode);
 
-        // Class Code
+        // Mã lớp
         TextView classCode = createTableCell(
                 grade.getClassCode() != null ? grade.getClassCode() : "", 1.2f);
         row.addView(classCode);
 
-        // Credits
+        // Tín chỉ
         TextView credits = createTableCell(String.valueOf(grade.getCredits()), 0.8f);
         row.addView(credits);
 
@@ -252,12 +278,15 @@ public class GradeActivity extends BaseActivity {
 
         // Average Grade (TB)
         TextView averageGrade = createGradeCell(grade.getAverageGrade(), 1.0f);
+        //Làm nổi bật cột điểm trung bình bằng cách bôi đậm (bold).
         averageGrade.setTypeface(null, android.graphics.Typeface.BOLD);
         row.addView(averageGrade);
 
         container.addView(row);
     }
 
+    // tạo và trả về một ô (TextView) dùng để hiển thị dữ liệu
+    // dạng văn bản trong bảng điểm, với trọng số chiều rộng (weight) xác định.
     private TextView createTableCell(String text, float weight) {
         TextView textView = new TextView(this);
         textView.setText(text != null ? text : "");
@@ -265,8 +294,11 @@ public class GradeActivity extends BaseActivity {
         textView.setGravity(android.view.Gravity.CENTER);
         textView.setTextSize(11);
         textView.setTextColor(ContextCompat.getColor(this, android.R.color.black));
-        textView.setSingleLine(true);
+        textView.setSingleLine(true); //Không cho xuống dòng, nếu nội dung dài sẽ bị cắt.
 
+        //width = 0 + weight = X: chiều rộng sẽ phân chia theo weight trong LinearLayout có weightSum.
+        //height = WRAP_CONTENT: chiều cao tự động theo nội dung.
+        //Dùng để chia ô như bảng tính, cân đối từng cột.
         LinearLayout.LayoutParams params = new LinearLayout.LayoutParams(
                 0,
                 LinearLayout.LayoutParams.WRAP_CONTENT,
@@ -277,15 +309,22 @@ public class GradeActivity extends BaseActivity {
         return textView;
     }
 
+    //Tạo một ô điểm (TextView) trong bảng điểm, với màu nền và màu chữ thay đổi tùy theo giá trị điểm số.
     private TextView createGradeCell(Float grade, float weight) {
+        //Gọi lại hàm createTableCell(...) để tạo TextView cơ bản.
+        //Dùng formatGrade(grade) để chuyển Float thành chuỗi (ví dụ: định dạng 8.5 → "8.50").
+        //weight dùng để chia tỷ lệ chiều rộng cột.
         TextView textView = createTableCell(formatGrade(grade), weight);
         
         // Áp dụng màu sắc dựa trên điểm
         if (grade != null && grade > 0) {
+            // trả về Drawable tùy điểm số (ví dụ: màu xanh nếu >=8, vàng nếu >=6.5...).
             Drawable background = getGradeBackground(grade);
             if (background != null) {
                 textView.setBackground(background);
+                //màu chữ phù hợp để đảm bảo độ tương phản với nền.
                 textView.setTextColor(getGradeTextColor(grade));
+                //Cập nhật lại padding để căn chỉnh đẹp hơn với nền màu.
                 textView.setPadding(8, 6, 8, 6);
             }
         }
@@ -293,6 +332,7 @@ public class GradeActivity extends BaseActivity {
         return textView;
     }
 
+    //Thêm màu nền cho các loại điểm
     private Drawable getGradeBackground(float grade) {
         if (grade >= 8.5f) {
             return ContextCompat.getDrawable(this, R.drawable.bg_grade_excellent);
@@ -306,6 +346,7 @@ public class GradeActivity extends BaseActivity {
         return null;
     }
 
+    //Thêm màu cho text các loại điểm
     private int getGradeTextColor(float grade) {
         if (grade >= 8.5f) {
             return ContextCompat.getColor(this, R.color.grade_excellent_text);
@@ -319,6 +360,7 @@ public class GradeActivity extends BaseActivity {
         return ContextCompat.getColor(this, android.R.color.black);
     }
 
+    //thêm một dòng thông báo khi không có dữ liệu điểm cho học kỳ.
     private void addEmptyRow(LinearLayout container) {
         TextView emptyText = new TextView(this);
         emptyText.setText("Chưa có dữ liệu điểm cho học kỳ này");
@@ -330,6 +372,7 @@ public class GradeActivity extends BaseActivity {
         
         container.addView(emptyText);
     }
+
 
     private void showSemesterStats(View semesterView, int totalCredits, float totalGradePoints, int validGradeCount) {
         LinearLayout footerStats = semesterView.findViewById(R.id.footerStats);

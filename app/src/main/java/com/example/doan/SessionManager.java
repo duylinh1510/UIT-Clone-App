@@ -52,7 +52,7 @@ public class SessionManager {
         editor.putInt(KEY_STUDENT_ID, studentId);
         editor.putString(KEY_STUDENT_CODE, studentCode);
         editor.putString(KEY_FULL_NAME, studentFullName);
-        editor.commit();
+        editor.commit(); // ghi đồng bộ (trả về true/false cho biết thành công hay không).
     }
 
     public void createAdminSession(int userId, String username, String role) {
@@ -104,7 +104,7 @@ public class SessionManager {
     }
 
     public void logout() {
-        editor.clear();
+        editor.clear(); // Xóa toàn bộ dữ liệu
         editor.commit();
     }
 }

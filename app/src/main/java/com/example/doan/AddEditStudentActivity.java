@@ -42,12 +42,12 @@ public class AddEditStudentActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_add_edit_student);
-        
-        initViews();
-        setupToolbar();
-        getIntentData();
-        loadDepartments();
-        setupClickListeners();
+
+        initViews();           // Gán view từ XML
+        setupToolbar();        // Gắn nút quay lại
+        getIntentData();       // Lấy dữ liệu nếu ở chế độ edit
+        loadDepartments();     // Gọi API lấy danh sách khoa
+        setupClickListeners(); // Gắn sự kiện cho nút
     }
 
     private void initViews() {
@@ -82,6 +82,7 @@ public class AddEditStudentActivity extends AppCompatActivity {
         }
     }
 
+    //Kiểm tra chế độ add hay edit
     private void getIntentData() {
         mode = getIntent().getStringExtra("mode");
         
@@ -100,6 +101,7 @@ public class AddEditStudentActivity extends AppCompatActivity {
         }
     }
 
+    //Gọi API lấy danh sách khoa
     private void loadDepartments() {
         progressBar.setVisibility(View.VISIBLE);
         
@@ -128,6 +130,7 @@ public class AddEditStudentActivity extends AppCompatActivity {
         });
     }
 
+    // Cập nhật spinner khoa và xử lý sự kiện khi chọn (Tên khoa được đưa vào spinner.)
     private void setupDepartmentSpinner() {
         List<String> departmentNames = new ArrayList<>();
         departmentNames.add("Chọn khoa");
@@ -259,6 +262,7 @@ public class AddEditStudentActivity extends AppCompatActivity {
         });
     }
 
+    //Khi người dùng chọn ngày, cập nhật vào TextView.
     private void showDatePicker() {
         DatePickerDialog datePickerDialog = new DatePickerDialog(
             this,
@@ -305,6 +309,9 @@ public class AddEditStudentActivity extends AppCompatActivity {
         }
     }
 
+    //Điền dữ liệu vào các ô input.
+    //
+    //Chọn khoa và lớp tương ứng.
     private boolean validateForm() {
         boolean isValid = true;
         
@@ -382,6 +389,8 @@ public class AddEditStudentActivity extends AppCompatActivity {
         return isValid;
     }
 
+    //Gọi API createStudent() với CreateStudentRequest.
+    // Nếu thành công, hiện toast và finish()
     private void createStudent() {
         progressBar.setVisibility(View.VISIBLE);
         btnSave.setEnabled(false);
@@ -425,6 +434,8 @@ public class AddEditStudentActivity extends AppCompatActivity {
         });
     }
 
+    // Gửi UpdateStudentRequest thông qua API.
+    // Nếu thành công, hiển thị toast và finish().
     private void updateStudent() {
         progressBar.setVisibility(View.VISIBLE);
         btnSave.setEnabled(false);

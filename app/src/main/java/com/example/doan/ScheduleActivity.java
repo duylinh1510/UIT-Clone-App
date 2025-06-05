@@ -97,7 +97,7 @@ public class ScheduleActivity extends BaseActivity {
 
     private void setupRetrofit() {
         Retrofit retrofit = new Retrofit.Builder()
-                .baseUrl("http://192.168.1.12/DoAnAndroid/")
+                .baseUrl("http://192.168.1.5/DoAnAndroid/")
                 .addConverterFactory(GsonConverterFactory.create())
                 .build();
         apiService = retrofit.create(ScheduleApiService.class);
@@ -159,7 +159,7 @@ public class ScheduleActivity extends BaseActivity {
     private void loadScheduleForDay(int dayOfWeek, TextView dayTextView) {
         Log.i(TAG, "loadScheduleForDay: dayOfWeek = " + dayOfWeek + ", studentId = " + studentId);
         
-        // Show loading state
+        //Hiển thị trạng thái loading
         scheduleLayout.removeAllViews();
         TextView loadingText = new TextView(this);
         loadingText.setText("Đang tải thời khóa biểu...");
@@ -172,7 +172,8 @@ public class ScheduleActivity extends BaseActivity {
             @Override
             public void onResponse(Call<ScheduleResponse> call, Response<ScheduleResponse> response) {
                 scheduleLayout.removeAllViews(); // Remove loading text
-                
+
+                // thêm logcat để debug
                 Log.i(TAG, "API Response: success = " + response.isSuccessful());
                 Log.i(TAG, "Response body: " + (response.body() != null ? response.body().toString() : "null"));
                 
@@ -207,15 +208,17 @@ public class ScheduleActivity extends BaseActivity {
         });
     }
 
+    //hàm update giao diện của TKB
     private void updateScheduleUI(List<Schedule> schedules) {
         for (Schedule schedule : schedules) {
             // Tạo CardView
-            CardView cardView = new CardView(this);
-            cardView.setCardElevation(8);
-            cardView.setRadius(12);
-            cardView.setUseCompatPadding(true);
-            cardView.setContentPadding(16, 16, 16, 16);
-            cardView.setCardBackgroundColor(Color.WHITE);
+            //Mỗi 1 thời khóa biểu là 1 cardview
+            CardView cardView = new CardView(this); //tạo 1 cardview mới ở activity hiện tại
+            cardView.setCardElevation(8); //thiết lập đổ bóng
+            cardView.setRadius(12); //độ bo góc
+            cardView.setUseCompatPadding(true); // bật padding tương thích cho cardview, giúp đổ bóng chuẩn
+            cardView.setContentPadding(16, 16, 16, 16); //Thiết lập padding bên trong CardView: trái, trên, phải, dưới (đơn vị dp).
+            cardView.setCardBackgroundColor(Color.WHITE); //màu nền
 
             // Tạo layout bên trong CardView
             LinearLayout cardContent = new LinearLayout(this);
@@ -227,19 +230,19 @@ public class ScheduleActivity extends BaseActivity {
             periodText.setTextSize(16);
             periodText.setTypeface(null, Typeface.BOLD);
             periodText.setTextColor(ContextCompat.getColor(this, android.R.color.holo_blue_dark));
-
+            //Môn học
             TextView subjectText = new TextView(this);
             subjectText.setText("Môn: " + schedule.subject_name + " (" + schedule.subject_class + ")");
             subjectText.setTextSize(14);
             subjectText.setTextColor(Color.BLACK);
             subjectText.setPadding(0, 8, 0, 4);
-
+            //Thời gian học
             TextView timeText = new TextView(this);
             timeText.setText("Thời gian: " + schedule.start_time + " - " + schedule.end_time);
             timeText.setTextSize(14);
             timeText.setTextColor(Color.GRAY);
 
-            // Thêm TextView vào CardView
+            // Thêm các TextView vào CardView
             cardContent.addView(periodText);
             cardContent.addView(subjectText);
             cardContent.addView(timeText);
@@ -250,7 +253,7 @@ public class ScheduleActivity extends BaseActivity {
             scheduleLayout.addView(cardView);
         }
     }
-
+    //Nếu mà không có lịch học thì gọi hàm này
     private void showEmptySchedule() {
         TextView emptyText = new TextView(this);
         emptyText.setText("📅 Không có lịch học cho ngày này");
@@ -261,6 +264,7 @@ public class ScheduleActivity extends BaseActivity {
         scheduleLayout.addView(emptyText);
     }
 
+    //Nếu bị lỗi thì gọi hàm này
     private void showErrorMessage(String message) {
         TextView errorText = new TextView(this);
         errorText.setText("⚠️ " + message);
@@ -271,6 +275,7 @@ public class ScheduleActivity extends BaseActivity {
         scheduleLayout.addView(errorText);
     }
 
+    //hàm để hightlight TextView
     private void highlightToday(TextView textView) {
         // Tạo background tròn màu xanh cho ngày hôm nay
         GradientDrawable drawable = new GradientDrawable();
@@ -282,6 +287,7 @@ public class ScheduleActivity extends BaseActivity {
         textView.setTextColor(Color.WHITE);
     }
 
+    //highlight ngày được chọn
     private void highlightSelectedDay(TextView textView) {
         // Tạo background tròn màu xanh đậm cho ngày được chọn
         GradientDrawable drawable = new GradientDrawable();
@@ -293,6 +299,7 @@ public class ScheduleActivity extends BaseActivity {
         textView.setTextColor(Color.WHITE);
     }
 
+    //reset màu của ngày được chọn
     private void resetDayStyle(TextView textView) {
         // Reset về style mặc định
         TypedValue outValue = new TypedValue();
@@ -313,6 +320,8 @@ public class ScheduleActivity extends BaseActivity {
         refreshCalendar();
     }
 
+
+    //không sử dụng được
     private class SwipeGestureListener extends GestureDetector.SimpleOnGestureListener {
         private static final int SWIPE_THRESHOLD = 100;
         private static final int SWIPE_VELOCITY_THRESHOLD = 100;

@@ -66,6 +66,8 @@ public class ProfileActivity extends BaseActivity {
         });
     }
 
+
+    //khởi tạo views
     private void initViews() {
         profileImage = findViewById(R.id.profileImage);
         studentName = findViewById(R.id.studentName);

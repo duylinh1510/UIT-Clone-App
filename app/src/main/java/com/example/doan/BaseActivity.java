@@ -61,18 +61,6 @@ public abstract class BaseActivity extends AppCompatActivity {
                 }
             });
         }
-
-        // Thêm các navigation khác nếu có
-        // Ví dụ: Học phí, Thông báo...
-        
-        // Đăng xuất (nếu có)
-//        LinearLayout navLogout = findViewById(R.id.navLogout);
-//        if (navLogout != null) {
-//            navLogout.setOnClickListener(v -> {
-//                logout();
-//            });
-//        }
-
         // Highlight navigation item hiện tại
         highlightCurrentNavItem();
     }

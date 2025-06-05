@@ -19,9 +19,9 @@ public interface ApiService {
     @GET("student_profile.php")
     Call<StudentProfileResponse> getStudentProfile(@Query("student_id") int studentId);
 
-    // Existing APIs
+    // Exam Schedule API
     @GET("get_exam_schedule.php")
-    Call<ApiResponse> getExamSchedule(@Query("student_id") int studentID);
+    Call<ApiResponse> getExamSchedule(@Query("student_id") int studentId);
 
     @GET("student.php")
     Call<GradeResponse> getStudentGrades(@Query("student_id") int studentId);

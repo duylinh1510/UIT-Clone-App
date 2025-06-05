@@ -27,10 +27,13 @@ public class AdminStudentsActivity extends AppCompatActivity {
     private List<AdminStudent> studentsList = new ArrayList<>();
     
     private EditText etSearch;
+
+    // Spinner trong Android là một widget dạng dropdown (thả xuống)
+    // dùng để cho người dùng chọn một giá trị trong một danh sách các lựa chọn.
     private Spinner spDepartments;
-    private Button btnPrevious, btnNext;
-    private TextView tvPageInfo;
-    private ProgressBar progressBar;
+    private Button btnPrevious, btnNext; //Button Previous/Next: Điều hướng qua lại giữa các trang
+    private TextView tvPageInfo; //Hiển thị thông tin "Trang X / Y"
+    private ProgressBar progressBar; //Hiển thị khi đang load dữ liệu
     private FloatingActionButton fabAdd;
     
     private ApiService apiService;
@@ -48,11 +51,11 @@ public class AdminStudentsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_admin_students);
         
-        initViews();
+        initViews(); // Gán view từ XML
         setupRecyclerView();
         setupClickListeners();
-        loadDepartments();
-        loadStudents();
+        loadDepartments(); // Gọi API lấy danh sách khoa
+        loadStudents();// Gọi API lấy danh sách sinh viên
     }
 
     private void initViews() {
@@ -102,9 +105,11 @@ public class AdminStudentsActivity extends AppCompatActivity {
 
             @Override
             public void afterTextChanged(Editable s) {
-                currentSearch = s.toString().trim();
-                currentPage = 1;
-                loadStudents();
+                // Được gọi SAU KHI text đã thay đổi hoàn toàn
+                // ĐÂY LÀ NƠI THỰC HIỆN SEARCH
+                currentSearch = s.toString().trim(); // Lấy text và loại bỏ khoảng trắng
+                currentPage = 1;  // Reset về trang đầu khi search mới
+                loadStudents(); // Gọi API với keyword mới
             }
         });
 
@@ -179,7 +184,11 @@ public class AdminStudentsActivity extends AppCompatActivity {
 
     private void loadStudents() {
         progressBar.setVisibility(View.VISIBLE);
-        
+
+        //currentPage: Trang hiện tại (pagination)
+        //limit: Số record mỗi trang (10)
+        //currentSearch: Từ khóa tìm kiếm
+        //currentDepartmentId: Filter theo khoa
         apiService.getStudents(currentPage, limit, currentSearch, currentDepartmentId)
                 .enqueue(new Callback<AdminStudentsResponse>() {
             @Override
@@ -188,6 +197,7 @@ public class AdminStudentsActivity extends AppCompatActivity {
                 
                 if (response.isSuccessful() && response.body() != null && response.body().isSuccess()) {
                     AdminStudentsResponse studentsResponse = response.body();
+                    // Cập nhật danh sách sinh viên
                     studentsList.clear();
                     studentsList.addAll(studentsResponse.getData());
                     adapter.notifyDataSetChanged();
@@ -212,9 +222,11 @@ public class AdminStudentsActivity extends AppCompatActivity {
     }
 
     private void updatePaginationUI() {
+        // Hiển thị thông tin trang
         tvPageInfo.setText("Trang " + currentPage + " / " + totalPages);
-        btnPrevious.setEnabled(currentPage > 1);
-        btnNext.setEnabled(currentPage < totalPages);
+        // Enable/Disable buttons dựa trên trang hiện tại
+        btnPrevious.setEnabled(currentPage > 1); // Disable khi ở trang đầu
+        btnNext.setEnabled(currentPage < totalPages); // Disable khi ở trang cuối
     }
 
     private void openAddStudent() {

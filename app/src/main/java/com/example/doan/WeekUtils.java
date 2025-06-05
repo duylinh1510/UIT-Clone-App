@@ -37,7 +37,7 @@ public class WeekUtils {
         Calendar calendar = Calendar.getInstance();
 
         // Tìm về Chủ Nhật (Calendar.SUNDAY = 1)
-        //lùi về ngày Chủ Nhật đầu tuần hiện tại, (nếu hôm nay là Thứ Ba → lùi 2 ngày, v.v.)
+        // lùi về ngày Chủ Nhật đầu tuần hiện tại, (nếu hôm nay là Thứ Ba → lùi 2 ngày, v.v.)
         int currentDayOfWeek = calendar.get(Calendar.DAY_OF_WEEK);
         int daysToSubtract = currentDayOfWeek - Calendar.SUNDAY;
         calendar.add(Calendar.DAY_OF_MONTH, -daysToSubtract);

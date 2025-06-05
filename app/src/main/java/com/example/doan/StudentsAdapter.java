@@ -8,6 +8,11 @@ import android.widget.TextView;
 import androidx.annotation.NonNull;
 import androidx.recyclerview.widget.RecyclerView;
 import java.util.List;
+//Cách hoạt động:
+//Adapter nhận danh sách sinh viên và listener
+//RecyclerView yêu cầu tạo ViewHolder cho mỗi item hiển thị
+//Dữ liệu được bind vào các view trong ViewHolder
+//Khi user click nút Edit/Delete, callback được gọi để xử lý
 
 public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.StudentViewHolder> {
     
@@ -15,15 +20,21 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.Studen
     private OnStudentClickListener listener;
 
     public interface OnStudentClickListener {
+        //Định nghĩa callback interface để xử lý sự kiện click
+        //Có 2 phương thức: chỉnh sửa và xóa sinh viên
         void onEditClick(AdminStudent student);
         void onDeleteClick(AdminStudent student);
     }
 
+    //Nhận vào danh sách sinh viên và listener để xử lý sự kiện
+    //Lưu trữ thành các biến instance
     public StudentsAdapter(List<AdminStudent> students, OnStudentClickListener listener) {
         this.students = students;
         this.listener = listener;
     }
 
+    //Tạo ViewHolder mới từ layout item_admin_student
+    //Được gọi khi RecyclerView cần tạo item view mới
     @NonNull
     @Override
     public StudentViewHolder onCreateViewHolder(@NonNull ViewGroup parent, int viewType) {
@@ -32,12 +43,16 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.Studen
         return new StudentViewHolder(view);
     }
 
+    //Gắn dữ liệu sinh viên vào ViewHolder tại vị trí cụ thể
+    //Gọi phương thức bind() của ViewHolder
     @Override
     public void onBindViewHolder(@NonNull StudentViewHolder holder, int position) {
         AdminStudent student = students.get(position);
         holder.bind(student);
     }
 
+    //getItemCount():
+    //Trả về số lượng item trong danh sách
     @Override
     public int getItemCount() {
         return students.size();
@@ -46,7 +61,7 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.Studen
     class StudentViewHolder extends RecyclerView.ViewHolder {
         private TextView tvStudentCode, tvStudentName, tvEmail, tvDepartment, tvClass;
         private ImageButton btnEdit, btnDelete;
-
+        //Quản lý các view trong một item của danh sách:
         public StudentViewHolder(@NonNull View itemView) {
             super(itemView);
             tvStudentCode = itemView.findViewById(R.id.tvStudentCode);
@@ -57,7 +72,10 @@ public class StudentsAdapter extends RecyclerView.Adapter<StudentsAdapter.Studen
             btnEdit = itemView.findViewById(R.id.btnEdit);
             btnDelete = itemView.findViewById(R.id.btnDelete);
         }
-
+        //Phương thức bind():
+        //Gán dữ liệu từ đối tượng AdminStudent vào các TextView
+        //Thiết lập OnClickListener cho 2 nút Edit và Delete
+        //Khi click sẽ gọi callback thông qua interface OnStudentClickListener
         public void bind(AdminStudent student) {
             tvStudentCode.setText(student.getStudentCode());
             tvStudentName.setText(student.getStudentFullName());
